@@ -1,5 +1,5 @@
 // 拷贝树
-export const filterTree = ({ root, condition = () => true, rootLevel = 1 }) => {
+export function filterTree({ root, condition = () => true, rootLevel = 1 }) {
   if (!root) return null;
 
   const rootIsArray = Array.isArray(root);
@@ -52,4 +52,4 @@ export const filterTree = ({ root, condition = () => true, rootLevel = 1 }) => {
   }
 
   return filteredTree;
-};
+}

@@ -1,5 +1,5 @@
 // 后序遍历函数
-export const postOrderTraversal = ({ root, cb, rootLevel = 1 } = {}) => {
+export function postOrderTraversal({ root, cb, rootLevel = 1 } = {}) {
   if (!root) return; // 如果根节点为空，直接返回
 
   const rootIsArray = Array.isArray(root);
@@ -37,4 +37,4 @@ export const postOrderTraversal = ({ root, cb, rootLevel = 1 } = {}) => {
   }
 
   return root;
-};
+}

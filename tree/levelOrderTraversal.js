@@ -4,7 +4,7 @@
  * @param {Function} cb 层序遍历节点的回调
  * @returns {Array|Object}
  */
-export const levelOrderTraversal = ({ root, cb, rootLevel = 1 } = {}) => {
+export function levelOrderTraversal({ root, cb, rootLevel = 1 } = {}) {
   // 空树,直接返回
   if (!root) return;
 
@@ -35,4 +35,4 @@ export const levelOrderTraversal = ({ root, cb, rootLevel = 1 } = {}) => {
   }
 
   return root;
-};
+}

@@ -1,0 +1,34 @@
+{
+  "name": "utils",
+  "version": "1.0.0",
+  "description": "Used tool methods",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js",
+    "dev": "nodemon --exec babel-node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sunxuedong/utils.git"
+  },
+  "keywords": [
+    "utils",
+    "tree",
+    "G6Util",
+    "array",
+    "object",
+    "string"
+  ],
+  "author": "sunxuedong",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sunxuedong/utils/issues"
+  },
+  "homepage": "https://github.com/sunxuedong/utils#readme",
+  "devDependencies": {
+    "@babel/core": "^7.24.3",
+    "@babel/node": "^7.23.9",
+    "@babel/preset-env": "^7.24.3"
+  }
+}
