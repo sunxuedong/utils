@@ -23,21 +23,8 @@ export function getShortestPointInLine(data) {
   const { x: startX, y: startY } = start;
   const { x: endX, y: endY } = end;
   const { x: pointX, y: pointY } = point;
+  let shortestPoint = null;
 
-  // 特殊情况处理：如果线段是垂直线
-  if (startX === endX) {
-    // 垂直线的情况下，垂直距离就是水平距离
-    return Math.abs(pointX - startX);
-  }
-
-  const dx = endX - startX;
-  const dy = endY - startY;
-  const slope = dy / dx;
-  const intercept = startY - slope * startX;
-  // 计算目标点到线段的垂直距离
-  const perpendicularDistance =
-    Math.abs(-slope * pointX + pointY - intercept) /
-    Math.sqrt(slope * slope + 1);
   // 确定目标点是否在线段的范围内
   if (
     pointX >= Math.min(startX, endX) &&
@@ -45,13 +32,29 @@ export function getShortestPointInLine(data) {
     pointY >= Math.min(startY, endY) &&
     pointY <= Math.max(startY, endY)
   ) {
-    // 计算垂足的坐标
-    let footX =
-      (slope * pointY + pointX / slope + startY - slope * startX) /
-      (slope + 1 / slope);
-    let footY = slope * (footX - startX) + startY;
-    // return Math.sqrt((footX - pointX) ** 2 + (footY - pointY) ** 2);
-    return { x: footX, y: footY };
+    // 特殊情况处理：如果线段是垂直线
+    if (startX === endX || startY === endY) {
+      // 垂直线的情况下，垂直距离就是水平距离
+      shortestPoint = { x: pointX, y: pointY };
+    } else {
+      const dx = endX - startX;
+      const dy = endY - startY;
+      const slope = dy / dx;
+      // const intercept = startY - slope * startX;
+      // 计算目标点到线段的垂直距离
+      // const perpendicularDistance =
+      //   Math.abs(-slope * pointX + pointY - intercept) /
+      //   Math.sqrt(slope * slope + 1);
+      // 计算垂足的坐标
+      let footX =
+        (slope * pointY + pointX / slope + startY - slope * startX) /
+        (slope + 1 / slope);
+      let footY = slope * (footX - startX) + startY;
+      // return Math.sqrt((footX - pointX) ** 2 + (footY - pointY) ** 2);
+      shortestPoint = { x: footX, y: footY };
+    }
+
+    shortestPoint.ifPointNearSegment = true;
   } else {
     // 如果目标点在线段的延长线上，则返回线段的端点到目标点的距离
     const distanceFromStart = Math.sqrt(
@@ -62,11 +65,15 @@ export function getShortestPointInLine(data) {
     );
 
     if (distanceFromStart < distanceFromEnd) {
-      return start;
+      shortestPoint = { ...start };
     } else {
-      return end;
+      shortestPoint = { ...end };
     }
+
+    shortestPoint.ifPointNearSegment = false;
   }
+
+  return shortestPoint;
 }
 
 // 寻找离得最近的线段
@@ -90,4 +97,35 @@ export function findClosestLineSegments(data = {}) {
   }
 
   return { minDistance, closestPoint, targetSegment, targetSegmentIndex };
+}
+
+// points list to segment
+export function points2Segments(points) {
+  const segments = [];
+
+  for (let i = 0; i < points.length; i++) {
+    const startPoint = points[i];
+    const endPoint = points[i + 1];
+
+    if (startPoint && endPoint) {
+      segments.push([startPoint, endPoint]);
+    }
+  }
+
+  return segments;
+}
+
+export function isPointOnSegment({ point, segment, maxDistance = 10 }) {
+  let ifPointOnSegment = false;
+  const { ifPointNearSegment, ...closestPoint } = getShortestPointInLine({
+    segment,
+    point,
+  });
+
+  if (ifPointNearSegment) {
+    const distance = getDistance(closestPoint, point);
+    ifPointOnSegment = distance < maxDistance;
+  }
+
+  return { ifPointOnSegment };
 }
